@@ -1,89 +1,82 @@
-<h1 align="center">
-  💼 AttendEase - Modern HRMS for Smart Workplaces
-</h1>
+# 👨‍👩‍👧‍👦 FamilyConnect - A Private Social Network for Families
 
-<p align="center">
-  <b>A feature-rich HR Management System to track attendance, manage leaves, and ensure smooth handovers</b><br/>
-  <i>Built with MERN stack, Tailwind CSS, and Framer Motion</i>
-</p>
+![FamilyConnect Banner](https://placehold.co/1200x400/3b82f6/ffffff?text=FamilyConnect+-+Private+Social+Media+for+Families)
 
----
-
-<div align="center">
-
-![Tech](https://img.shields.io/badge/Stack-MERN-blueviolet?style=for-the-badge&logo=javascript)
-![Frontend](https://img.shields.io/badge/Frontend-Next.js-black?style=for-the-badge&logo=next.js)
-![Backend](https://img.shields.io/badge/Backend-Express.js-darkgreen?style=for-the-badge&logo=express)
-![Database](https://img.shields.io/badge/Database-MongoDB-green?style=for-the-badge&logo=mongodb)
-![CSS](https://img.shields.io/badge/CSS-Tailwind-blue?style=for-the-badge&logo=tailwindcss)
-![Motion](https://img.shields.io/badge/Animations-Framer%20Motion-pink?style=for-the-badge&logo=framer)
-
-</div>
+**FamilyConnect** is a Django-powered platform built to bring families closer by enabling private group communication, event sharing, document uploads, and secure group management. It's not just a social network—it's a digital family space. ❤️
 
 ---
 
 ## ✨ Key Features
 
-- 👥 Role-Based Access (Admin, Manager, Employee)
-- 🗓️ Leave Request & Approval (Sick, Casual, Earned, Half-day, Hourly)
-- 📊 Attendance Monitoring (Daily, Weekly, Monthly)
-- 🔁 Duty Handover & Work Substitution
-- 🧮 Leave Balancing & Auto-Deduction
-- 📈 Dynamic Reports & Dashboards
+### 🏠 Family Groups
+- Create or join family groups using a unique **Group ID**
+- Admin approval required for new member requests
+- Family-based content sharing and visibility
+
+### 📬 Membership System
+- Secure join requests with admin-only approvals
+- Member roles: **Admin**, **Member**
+- Notifications for membership actions
+
+### 📸 Posts & Memories
+- Share **public**, **private**, or **group-only** posts
+- Upload photos, videos, and text memories
+- React and comment within the family circle
+
+### 📅 Events & Celebrations
+- Share upcoming family events like birthdays, anniversaries, reunions
+- RSVP and reminders for event participation
+
+### 📂 Secure Document Sharing
+- Upload & store important family docs (e.g., **Aadhaar, Certificates**)
+- Role-based access to documents
+
+### 💸 Membership Fees
+- Optional monthly **membership fee system**
+- Track payments for each member
+- Admin reports for due and paid members
 
 ---
 
-## 🔧 Tech Stack
+## 🛠️ Tech Stack
 
-| Layer       | Technology                    |
-|------------|-------------------------------|
-| Frontend    | `Next.js`, `Tailwind CSS`, `Framer Motion` |
-| Backend     | `Node.js`, `Express.js`       |
-| Database    | `MongoDB` (NoSQL)             |
-| Auth        | `JWT`, `bcrypt`, Role-based   |
-| Dev Tools   | `VS Code`, `Postman`, `Mongo Compass` |
-
----
-
-## 🧠 Modules Breakdown
-
-| Module                         | Estimated Time |
-|--------------------------------|----------------|
-| 👤 User Management              | 15 hours       |
-| 📝 Leave Management             | 25 hours       |
-| ⏱️ Attendance Tracking          | 20 hours       |
-| 🔄 Work Substitution & Handover| 15 hours       |
-| 📊 Reports & Analytics          | 15 hours       |
-| 🧑‍💼 Admin Dashboard            | 15 hours       |
-| **🧮 Total**                    | **105 hours**  |
+| Layer      | Technology        |
+|------------|-------------------|
+| **Backend**   | Django, Django Rest Framework |
+| **Frontend**  | Django Templates, Bootstrap 5 |
+| **Database**  | PostgreSQL / SQLite (for dev) |
+| **Auth**      | Django Auth (Custom User Model) |
+| **Storage**   | FileSystem / Cloud (S3-ready) |
 
 ---
 
-## 🗃️ Database Example Schema
+## 🚀 Getting Started
 
-```js
-// Employee Model
-{
-  employeeId: "EMP101",
-  name: "Alice Thomas",
-  department: "IT",
-  email: "alice@example.com",
-  password: "<hashed>",
-  role: "employee",
-  leaveBalance: {
-    sick: 6,
-    casual: 4,
-    earned: 10,
-  }
-}
+### 🧰 Prerequisites
+- Python 3.10+
+- pip / venv
+- PostgreSQL (optional, for production)
 
-// Leave Request
-{
-  leaveId: "LV2025-002",
-  employeeId: "EMP101",
-  leaveType: "Sick",
-  from: "2025-06-25",
-  to: "2025-06-27",
-  status: "Pending",
-  substituteEmployeeId: "EMP110"
-}
+### ⚙️ Installation
+
+```bash
+# Clone the repo
+git clone https://github.com/your-username/familyconnect.git
+cd familyconnect
+
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Setup DB
+python manage.py makemigrations
+python manage.py migrate
+
+# Create superuser
+python manage.py createsuperuser
+
+# Run the server
+python manage.py runserver
