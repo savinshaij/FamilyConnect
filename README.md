@@ -1,82 +1,89 @@
-# 👨‍👩‍👧‍👦 FamilyConnect - A Private Social Network for Families
+<h1 align="center">
+  👨‍👩‍👧‍👦 FamilyConnect - Social Platform for Families
+</h1>
 
-![FamilyConnect Banner](https://placehold.co/1200x400/3b82f6/ffffff?text=FamilyConnect+-+Private+Social+Media+for+Families)
-
-**FamilyConnect** is a Django-powered platform built to bring families closer by enabling private group communication, event sharing, document uploads, and secure group management. It's not just a social network—it's a digital family space. ❤️
+<p align="center">
+  <b>Private, secure, and engaging platform to connect and celebrate family moments together</b><br/>
+  <i>Built with Django, PostgreSQL, Tailwind CSS, and a focus on bonding & belonging</i>
+</p>
 
 ---
 
-## ✨ Key Features
+<div align="center">
 
-### 🏠 Family Groups
-- Create or join family groups using a unique **Group ID**
-- Admin approval required for new member requests
-- Family-based content sharing and visibility
+![Backend](https://img.shields.io/badge/Backend-Django-092E20?style=for-the-badge&logo=django&logoColor=white)
+![Database](https://img.shields.io/badge/Database-PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
+![Frontend](https://img.shields.io/badge/Frontend-Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
+![Auth](https://img.shields.io/badge/Auth-Secure_Email_Verification-blue?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-In_Development-yellow?style=for-the-badge)
 
-### 📬 Membership System
-- Secure join requests with admin-only approvals
-- Member roles: **Admin**, **Member**
-- Notifications for membership actions
+</div>
 
-### 📸 Posts & Memories
-- Share **public**, **private**, or **group-only** posts
-- Upload photos, videos, and text memories
-- React and comment within the family circle
+---
 
-### 📅 Events & Celebrations
-- Share upcoming family events like birthdays, anniversaries, reunions
-- RSVP and reminders for event participation
+## 🌟 Features
 
-### 📂 Secure Document Sharing
-- Upload & store important family docs (e.g., **Aadhaar, Certificates**)
-- Role-based access to documents
+- 🏠 **Family Groups**
+  - Create & join family groups with approval-based membership
+  - Group admins control access and manage requests
 
-### 💸 Membership Fees
-- Optional monthly **membership fee system**
-- Track payments for each member
-- Admin reports for due and paid members
+- 📝 **Posts & Sharing**
+  - Public, private, and group-specific posts
+  - Memory uploads including images, videos, and documents
+
+- 📅 **Events**
+  - Add and manage family events like birthdays and anniversaries
+  - Calendar view and notifications
+
+- 📂 **Documents**
+  - Secure Aadhaar and family document uploads per group
+  - Access-controlled storage
+
+- 💸 **Monthly Membership**
+  - Track monthly family group fees
+  - Role-based permissions for payment tracking
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Layer      | Technology        |
-|------------|-------------------|
-| **Backend**   | Django, Django Rest Framework |
-| **Frontend**  | Django Templates, Bootstrap 5 |
-| **Database**  | PostgreSQL / SQLite (for dev) |
-| **Auth**      | Django Auth (Custom User Model) |
-| **Storage**   | FileSystem / Cloud (S3-ready) |
+| Layer       | Tech               |
+|-------------|--------------------|
+| Backend     | Django             |
+| Database    | PostgreSQL         |
+| Frontend    | Tailwind CSS       |
+| Auth        | Django Allauth + Email OTP |
+| Media       | Cloudinary (optional) |
 
 ---
 
 ## 🚀 Getting Started
 
-### 🧰 Prerequisites
+### Prerequisites
 - Python 3.10+
-- pip / venv
-- PostgreSQL (optional, for production)
+- PostgreSQL
+- pip / pipenv
 
-### ⚙️ Installation
+### Installation
 
 ```bash
-# Clone the repo
-git clone https://github.com/your-username/familyconnect.git
-cd familyconnect
+# Clone the project
+git clone https://github.com/savinshaij/FamilyConnect.git
+cd FamilyConnect
 
 # Create virtual environment
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+python -m venv env
+source env/bin/activate  # or env\Scripts\activate on Windows
 
 # Install dependencies
 pip install -r requirements.txt
 
-# Setup DB
-python manage.py makemigrations
-python manage.py migrate
+# Configure environment variables in .env
+cp .env.example .env
 
-# Create superuser
+# Apply migrations & create superuser
+python manage.py migrate
 python manage.py createsuperuser
 
-# Run the server
+# Start development server
 python manage.py runserver
