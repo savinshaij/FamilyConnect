@@ -15,7 +15,7 @@
 ![Database](https://img.shields.io/badge/Database-PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
 ![Frontend](https://img.shields.io/badge/Frontend-Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 ![Auth](https://img.shields.io/badge/Auth-Secure_Email_Verification-blue?style=for-the-badge)
-![Status](https://img.shields.io/badge/Status-In_Development-yellow?style=for-the-badge)
+![Status](https://img.shields.io/badge/Status-Completed-initial-version-yellow?style=for-the-badge)
 
 </div>
 
