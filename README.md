@@ -4,7 +4,7 @@
 
 <p align="center">
   <b>Private, secure, and engaging platform to connect and celebrate family moments together</b><br/>
-  <i>Built with Django, PostgreSQL, Tailwind CSS, and a focus on bonding & belonging</i>
+  <i>Built with Django, SQLite, Tailwind CSS, and a focus on bonding & belonging</i>
 </p>
 
 ---
@@ -12,10 +12,10 @@
 <div align="center">
 
 ![Backend](https://img.shields.io/badge/Backend-Django-092E20?style=for-the-badge&logo=django&logoColor=white)
-![Database](https://img.shields.io/badge/Database-PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
+![Database](https://img.shields.io/badge/Database-SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=white)
 ![Frontend](https://img.shields.io/badge/Frontend-Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)
 ![Auth](https://img.shields.io/badge/Auth-Secure_Email_Verification-blue?style=for-the-badge)
-
+![Status](https://img.shields.io/badge/Status-Active-green?style=for-the-badge)
 
 </div>
 
@@ -47,13 +47,13 @@
 
 ## 🛠️ Tech Stack
 
-| Layer       | Tech               |
-|-------------|--------------------|
-| Backend     | Django             |
-| Database    | PostgreSQL         |
-| Frontend    | Tailwind CSS       |
-| Auth        | Django Allauth + Email OTP |
-| Media       | Cloudinary (optional) |
+| Layer       | Tech                        |
+|-------------|-----------------------------|
+| Backend     | Django                      |
+| Database    | SQLite (default Django DB)  |
+| Frontend    | Tailwind CSS                |
+| Auth        | Django Allauth + Email OTP  |
+| Media       | Cloudinary (optional)       |
 
 ---
 
@@ -61,8 +61,8 @@
 
 ### Prerequisites
 - Python 3.10+
-- PostgreSQL
-- pip / pipenv
+- pip or pipenv
+- Git
 
 ### Installation
 
