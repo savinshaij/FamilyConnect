@@ -1,0 +1,129 @@
+<form method="POST" action="{% url 'finance:add_payment' group.id %}" enctype="multipart/form-data"
+      class="max-w-2xl mx-auto p-6 border-2 border-black rounded-xl bg-white shadow-[4px_4px_0_#000] space-y-6">
+  {% csrf_token %}
+
+  <h3 class="text-lg font-extrabold uppercase tracking-wide text-center border-b-2 border-black pb-2">
+    Add Group Payment
+  </h3>
+
+  <!-- Member Selection -->
+  <div class="relative border-2 border-black rounded-lg bg-white shadow-[2px_2px_0_#000]">
+    <div class="absolute inset-y-0 left-0 flex items-center pl-3 text-black">
+      <i class="fas fa-user text-sm"></i>
+    </div>
+    <select
+      name="user_id"
+      required
+      class="w-full pl-9 pr-3 py-2 bg-transparent focus:outline-none font-bold text-sm uppercase text-black"
+    >
+      {% for member in members %}
+        <option value="{{ member.user.id }}">{{ member.user.username }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+ 
+  <div class="relative border-2 border-black rounded-lg bg-white shadow-[2px_2px_0_#000]">
+    <div class="absolute inset-y-0 left-0 flex items-center pl-3 text-black">
+      <i class="fas fa-heading text-sm"></i>
+    </div>
+    <input
+      type="text"
+      name="title"
+      required
+      placeholder="TITLE"
+      class="w-full pl-9 pr-3 py-2 bg-transparent focus:outline-none font-bold text-sm uppercase text-black placeholder-black placeholder-opacity-60"
+    />
+  </div>
+
+  
+  <div class="relative border-2 border-black rounded-lg bg-white shadow-[2px_2px_0_#000]">
+    <div class="absolute inset-y-0 left-0 flex items-center pl-3 text-black">
+      <i class="fas fa-tags text-sm"></i>
+    </div>
+    <input
+      type="text"
+      name="category"
+      required
+      placeholder="CATEGORY"
+      class="w-full pl-9 pr-3 py-2 bg-transparent focus:outline-none font-bold text-sm uppercase text-black placeholder-black placeholder-opacity-60"
+    />
+  </div>
+
+
+  <div class="relative border-2 border-black rounded-lg bg-white shadow-[2px_2px_0_#000]">
+    <div class="absolute inset-y-0 left-0 flex items-center pl-3 text-black font-bold text-sm">
+      ₹
+    </div>
+    <input
+      type="number"
+      name="amount"
+      step="0.01"
+      required
+      placeholder="AMOUNT"
+      class="w-full pl-9 pr-3 py-2 bg-transparent focus:outline-none font-bold text-sm uppercase text-black placeholder-black placeholder-opacity-60"
+    />
+  </div>
+
+
+  <div class="relative border-2 border-black rounded-lg bg-white shadow-[2px_2px_0_#000]">
+    <div class="absolute inset-y-0 left-0 flex items-center pl-3 text-black">
+      <i class="fas fa-calendar-alt text-sm"></i>
+    </div>
+    <input
+      type="month"
+      name="month"
+      required
+      class="w-full pl-9 pr-3 py-2 bg-transparent focus:outline-none font-bold text-sm uppercase text-black"
+    />
+  </div>
+
+  
+  <div class="flex items-center space-x-2">
+    <input
+      type="checkbox"
+      id="status_paid"
+      name="status"
+      value="paid"
+      class="w-5 h-5 text-black focus:ring-black border-black rounded"
+    />
+    <label for="status_paid" class="font-bold uppercase text-sm text-black select-none">Mark as Paid</label>
+  </div>
+
+ 
+  <div class="relative border-2 border-black rounded-lg bg-white shadow-[2px_2px_0_#000]">
+    <div class="absolute inset-y-0 left-0 flex items-center pl-3 text-black">
+      <i class="fas fa-credit-card text-sm"></i>
+    </div>
+    <select
+      name="payment_method"
+      class="w-full pl-9 pr-3 py-2 bg-transparent focus:outline-none font-bold text-sm uppercase text-black"
+    >
+      <option value="cash">Cash</option>
+      <option value="bank_transfer">Bank Transfer</option>
+      <option value="upi">UPI</option>
+      <option value="card">Card</option>
+      <option value="other">Other</option>
+    </select>
+  </div>
+
+  <div class="relative border-2 border-black rounded-lg bg-white shadow-[2px_2px_0_#000]">
+    <div class="absolute top-3 left-0 flex items-start pl-3 pt-2 text-black">
+      <i class="fas fa-pencil-alt text-sm"></i>
+    </div>
+    <textarea
+      name="notes"
+      rows="3"
+      placeholder="NOTES (OPTIONAL)"
+      class="w-full pl-9 pr-3 py-2 bg-transparent focus:outline-none font-bold text-sm resize-none uppercase text-black placeholder-black placeholder-opacity-60"
+    ></textarea>
+  </div>
+
+
+  <button
+    type="submit"
+    class="w-full px-6 py-3 bg-black text-white font-black uppercase border-2 border-black shadow-[3px_3px_0_#FF4F4F] hover:bg-[#FF4F4F] hover:text-black hover:shadow-[1.5px_1.5px_0_#FF4F4F] transition-all"
+  >
+    Confirm Payment
+  </button>
+</form>

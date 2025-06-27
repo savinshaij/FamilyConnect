@@ -1,0 +1,58 @@
+
+<div class="  px-4 py-3 flex justify-end sm:px-6">
+  <div class="flex flex-col space-y-3 sm:space-y-0 sm:flex-row sm:items-center sm:justify-between w-full max-w-3xl">
+
+    
+    <div class="relative flex items-center w-full max-w-sm border-2 border-black rounded-md shadow-[2px_2px_0_#000] bg-white">
+      <input
+        type="text"
+        placeholder="Search here..."
+        class="w-full pl-3 pr-8 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-transparent text-sm"
+      />
+      <button class="absolute right-0 mr-2 text-black hover:text-indigo-700 transition-colors duration-150">
+        <i class="fas fa-search text-base"></i>
+      </button>
+    </div>
+
+  
+    <a href="?tab=add_document"
+      class="flex items-center justify-center px-4 py-2 border-2 border-black rounded-lg bg-[#FFDE59] shadow-[2px_2px_0_#000] hover:bg-[#F0E6D2] transition-colors duration-150 select-none uppercase font-semibold tracking-wide text-black text-sm"
+      >
+      Add Document
+    </a>
+  </div>
+</div>
+<div class="space-y-4 md:py-6 px-2 md:px-0">
+  {% if documents %}
+    {% for doc in documents %}
+      <div class="bg-white p-4 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] rounded-lg transition-all">
+        <div class="flex justify-between items-start gap-4">
+          <div class="flex-1">
+            <h3 class="text-lg font-bold">{{ doc.title }}</h3>
+            <p class="text-sm mt-1">{{ doc.content|default:"No description" }}</p>
+            <p class="text-xs mt-2 font-mono bg-black text-white px-2 py-1 rounded-md inline-block">
+              {{ doc.created_by.username }} · {{ doc.created_at|date:"M d, Y H:i" }}
+            </p>
+          </div>
+          {% if doc.file %}
+            <a href="{{ doc.file.url }}" target="_blank"
+               class="text-black hover:text-gray-800 font-bold text-sm border-2 border-black px-3 py-1 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] rounded-md transition-all">
+              {% if doc.is_image %}
+                <img src="{{ doc.file.url }}" alt="Preview" class="w-16 h-16 object-cover border-2 border-black rounded-md">
+              {% else %}
+                PREVIEW/DOWNLOAD →
+              {% endif %}
+            </a>
+          {% else %}
+            <span class="text-red-600 font-bold text-sm border-2 border-red-600 px-2 py-1 rounded-md">NO FILE</span>
+          {% endif %}
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <div class="bg-white p-4 border-2 border-black rounded-lg text-center">
+      <p class="font-bold">📁 NO DOCUMENTS FOUND</p>
+      <p class="text-sm mt-1">Upload the first one!</p>
+    </div>
+  {% endif %}
+</div>

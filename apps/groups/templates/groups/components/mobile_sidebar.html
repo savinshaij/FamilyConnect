@@ -1,0 +1,89 @@
+{% load static %}
+<div class="md:hidden my-10">
+  <!-- Hamburger Menu Button -->
+  <button id="menuToggle" class="fixed top-5 left-5 z-50 w-10 h-10 flex items-center justify-center bg-white border-2 border-black shadow-[3px_3px_0_0_rgba(0,0,0,1)] rounded-md focus:outline-none hover:shadow-[1px_1px_0_0_rgba(0,0,0,1)] hover:translate-x-[2px] hover:translate-y-[2px] transition-all">
+    <i class="fas fa-bars text-black text-xl"></i>
+  </button>
+  
+  <!-- Sidebar Navigation -->
+  <nav id="sidebar" class="fixed top-0 -left-64 w-64 h-full bg-white border-r-2 border-black shadow-[5px_0_0_0_rgba(0,0,0,1)] z-40 p-5 pt-16 transition-all duration-300 ease-in-out">
+    <ul class="space-y-3">
+      <li><a href="{% url 'core:home' %}" class="nav-link block px-4 py-3 font-bold text-black rounded-xl border-2 border-black  hover:translate-x-1 hover:translate-y-1 hover:shadow-[1px_1px_0_0_rgba(0,0,0,1)] hover:bg-yellow-300 transition-all">Home</a></li>
+      <li><a href="?tab=posts" class="nav-link block px-4 py-3 font-bold text-black rounded-xl border-2 border-black  hover:translate-x-1 hover:translate-y-1 hover:shadow-[1px_1px_0_0_rgba(0,0,0,1)] hover:bg-yellow-300 transition-all">Posts</a></li>
+      <li><a href="?tab=events" class="nav-link block px-4 py-3 font-bold text-black rounded-xl border-2 border-black  hover:translate-x-1 hover:translate-y-1 hover:shadow-[1px_1px_0_0_rgba(0,0,0,1)] hover:bg-yellow-300 transition-all">Events</a></li>
+      <li><a href="?tab=memories" class="nav-link block px-4 py-3 font-bold text-black rounded-xl border-2 border-black  hover:translate-x-1 hover:translate-y-1 hover:shadow-[1px_1px_0_0_rgba(0,0,0,1)] hover:bg-yellow-300 transition-all">Memories</a></li>
+      <li><a href="?tab=finance" class="nav-link block px-4 py-3 font-bold text-black rounded-xl border-2 border-black  hover:translate-x-1 hover:translate-y-1 hover:shadow-[1px_1px_0_0_rgba(0,0,0,1)] hover:bg-yellow-300 transition-all">Finanaces</a></li>
+            <li><a href="?tab=documents" class="nav-link block px-4 py-3 font-bold text-black rounded-xl border-2 border-black  hover:translate-x-1 hover:translate-y-1 hover:shadow-[1px_1px_0_0_rgba(0,0,0,1)] hover:bg-yellow-300 transition-all">Documents</a></li>
+    </ul>
+    
+  </nav>
+  
+  <!-- Overlay -->
+  <div id="overlay" class="fixed inset-0  bg-opacity-30 z-30 opacity-0 pointer-events-none transition-opacity duration-300"></div>
+
+
+  
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+    const body = document.body;
+    const navLinks = document.querySelectorAll('.nav-link');
+    
+    // Toggle menu
+    menuToggle.addEventListener('click', function() {
+      toggleMenu();
+    });
+    
+    // Close menu when clicking overlay
+    overlay.addEventListener('click', function() {
+      closeMenu();
+    });
+    
+    // Close menu when clicking any link
+    navLinks.forEach(link => {
+      link.addEventListener('click', function() {
+        closeMenu();
+      });
+    });
+    
+    function toggleMenu() {
+      sidebar.classList.toggle('left-0');
+      sidebar.classList.toggle('-left-64');
+      overlay.classList.toggle('opacity-0');
+      overlay.classList.toggle('pointer-events-none');
+      body.classList.toggle('no-scroll');
+      
+      // Toggle hamburger icon
+      const icon = menuToggle.querySelector('i');
+      if (sidebar.classList.contains('left-0')) {
+        icon.classList.remove('fa-bars');
+        icon.classList.add('fa-times');
+      } else {
+        icon.classList.remove('fa-times');
+        icon.classList.add('fa-bars');
+      }
+    }
+    
+    function closeMenu() {
+      sidebar.classList.remove('left-0');
+      sidebar.classList.add('-left-64');
+      overlay.classList.add('opacity-0', 'pointer-events-none');
+      body.classList.remove('no-scroll');
+      
+      // Reset hamburger icon
+      const icon = menuToggle.querySelector('i');
+      icon.classList.remove('fa-times');
+      icon.classList.add('fa-bars');
+    }
+  });
+</script>
+
+<style>
+  .no-scroll {
+    overflow: hidden;
+  }
+</style>

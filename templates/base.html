@@ -1,0 +1,49 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en"  x-data="{ mobileMenuOpen: false, openTab: 'home' }>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}FamilyConnect - Social Media for Families{% endblock %}</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/alpinejs@2.8.2/dist/alpine.min.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Hide all scrollbars -->
+    <style>
+        * {
+            scrollbar-width: none;       
+            -ms-overflow-style: none;    
+        }
+        *::-webkit-scrollbar {
+            display: none;              
+        }
+    </style>
+
+    {% block extra_head %}{% endblock %}
+</head>
+
+<body class="font-sans bg-white text-black  min-h-screen">
+
+    <main class="">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    {% block extra_scripts %}
+        
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+       
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                console.log('DOM fully loaded from base.html');
+                // Any specific tab or other JS logic here that relies on DOM
+            });
+        </script>
+    {% endblock %}
+
+</body>
+</html>

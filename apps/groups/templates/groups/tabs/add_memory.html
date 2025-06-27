@@ -1,0 +1,76 @@
+
+<form method="POST" action="{% url 'memories:add_memory' group.id %}" enctype="multipart/form-data"
+      class="max-w-2xl  mx-auto p-6 border-2 border-black rounded-xl bg-white shadow-[4px_4px_0_#000] space-y-6">
+  {% csrf_token %}
+
+  
+  <div class="relative border-2 border-black rounded-lg bg-white shadow-[2px_2px_0_#000]">
+    <div class="absolute inset-y-0 left-0 flex items-center pl-3 text-black">
+      <i class="fas fa-heading text-lg"></i>
+    </div>
+    <input
+      name="title"
+      type="text"
+      placeholder="YOUR MEMORY HEADLINE"
+      required
+      class="w-full pl-9 pr-3 py-2 rounded-lg bg-transparent focus:outline-none font-bold text-black text-sm uppercase placeholder-black placeholder-opacity-60"
+    />
+  </div>
+
+  <!-- Description -->
+  <div class="relative border-2 border-black rounded-lg bg-white shadow-[2px_2px_0_#000]">
+    <div class="absolute top-3 left-0 flex items-start pl-3 pt-2 text-black">
+      <i class="fas fa-align-left text-lg"></i>
+    </div>
+    <textarea
+      name="description"
+      maxlength="200"
+      rows="4"
+      placeholder="WHAT MAKES THIS MOMENT SPECIAL?"
+      class="w-full pl-9 pr-3 py-2 rounded-lg bg-transparent focus:outline-none font-bold text-black text-sm resize-none uppercase placeholder-black placeholder-opacity-60"
+    ></textarea>
+  </div>
+
+
+  <div>
+    <label for="memory-upload"
+           class="block mb-2 font-bold uppercase text-sm text-black tracking-wide">IMAGE (OPTIONAL)</label>
+
+    <div class="relative border-2 border-black rounded-lg bg-white shadow-[2px_2px_0_#000] overflow-hidden">
+      <div class="absolute inset-y-0 left-0 flex items-center pl-3 text-black">
+        <i class="fas fa-image text-lg"></i>
+      </div>
+      <input
+        type="file"
+        name="image"
+        id="memory-upload"
+        accept="image/*"
+        class="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+      />
+      <label for="memory-upload"
+             class="block w-full py-2 pl-9 pr-4 cursor-pointer font-bold text-sm text-black uppercase">
+        <span>CHOOSE FILE</span> <span class="block text-xs mt-1 font-normal">PNG/JPG (MAX 5MB)</span>
+      </label>
+    </div>
+    <div id="file-name" class="text-xs mt-1 font-mono text-black hidden"></div>
+  </div>
+
+  <!-- Submit Button -->
+  <button
+    type="submit"
+    class="w-full flex items-center justify-center space-x-2 py-3 rounded-lg border-2 border-black bg-black text-white font-bold uppercase tracking-wide shadow-[3px_3px_0_#FF4F4F] hover:bg-[#FF4F4F] hover:text-black hover:shadow-[1.5px_1.5px_0_#FF4F4F] transition duration-150 active:translate-y-0.5 active:shadow-[1px_1px_0_#000]"
+  >
+    <i class="fas fa-upload text-base"></i>
+    <span>UPLOAD UNFILTERED</span>
+  </button>
+</form>
+
+
+<script>
+  document.getElementById('memory-upload').addEventListener('change', function(e) {
+    const fileName = e.target.files[0]?.name || 'No file chosen';
+    const fileDisplay = document.getElementById('file-name');
+    fileDisplay.textContent = `SELECTED: ${fileName}`;
+    fileDisplay.classList.remove('hidden');
+  });
+</script>

@@ -1,0 +1,119 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}FamilyConnect - Home & Connect{% endblock %} 
+
+{% block content %}
+    <header class="sticky top-0 z-50 bg-white border-b-2 border-black shadow-[0_4px_0_0_rgba(0,0,0,1)]">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center">
+                <div class="border-2 border-black px-3 py-1 font-bold text-lg rounded-md"> {# Rounded logo box #}
+                    FamilyCONNECT
+                </div>
+            </div>
+            <nav class="hidden md:flex space-x-8 items-center">
+                <a href="#features" class="font-medium hover:text-gray-600 transition">Features</a>
+                <a href="#about" class="font-medium hover:text-gray-600 transition">About</a>
+               
+                <a href="{% url 'users:login' %}" class="font-medium bg-white text-black border-2 border-black px-4 py-1 rounded-lg hover:bg-black hover:text-white transition shadow-[2px_2px_0_0_rgba(0,0,0,1)] hover:shadow-[4px_4px_0_0_rgba(0,0,0,1)]">Login</a>
+                <a href="{% url 'users:register' %}" class="font-medium bg-[#FFDE59] text-black border-2 border-black px-4 py-1 rounded-lg hover:bg-[#E6C850] hover:text-black transition shadow-[2px_2px_0_0_rgba(0,0,0,1)] hover:shadow-[4px_4px_0_0_rgba(0,0,0,1)]">Register</a>
+            </nav>
+
+            
+            <div class="md:hidden">
+               
+                <a href="{% url 'users:login' %}" class="font-medium bg-[#FFDE59] text-black border-2 border-black px-4 py-1 rounded-lg hover:bg-[#E6C850] hover:text-black transition shadow-[2px_2px_0_0_rgba(0,0,0,1)] hover:shadow-[4px_4px_0_0_rgba(0,0,0,1)]">Login/Register</a>
+        </div>
+    </header>
+
+    <section class="container mx-auto bg-orange-200 md:px-20 py-16 md:py-24">
+        <div class="flex flex-col md:flex-row items-center">
+            <div class="md:w-1/2 mb-10 md:mb-0">
+                <h1 class="text-4xl md:text-6xl font-bold leading-tight mb-6">
+                    Build & Cherish <br>Your Family Legacy
+                </h1>
+                <p class="text-lg md:text-xl mb-10 max-w-lg">
+                    Connect generations in a meaningful way. Share stories, preserve memories, and strengthen bonds in a private, family-only space.
+                </p>
+                {# Button with rounded-lg and manual color #}
+                <a href="{% url 'users:login' %}" 
+                   
+                 class="bg-[#FFDE59] border-2 border-black px-8 py-3 text-lg font-bold rounded-lg hover:bg-[#E6C850] transition shadow-[4px_4px_0_0_rgba(0,0,0,1)] hover:shadow-[2px_2px_0_0_rgba(0,0,0,1)]">
+                    Create Your Family Space
+                </a>
+            </div>
+<div class="md:w-1/2 flex justify-center">
+   
+    <div class="border-2 border-black bg-[#A0C4FF] w-full max-w-md aspect-square flex items-center justify-center rounded-lg shadow-[8px_8px_0_0_rgba(0,0,0,1)]">
+        <img src="{% static 'images/landing.jpg' %}" alt="Landing Image" class="w-full h-full object-cover rounded-lg">
+    </div>
+</div>
+
+        </div>
+    </section>
+
+    <section id="features" class="md:px-20 bg-gray-50 border-t-2 border-b-2 border-black py-16">
+        <div class="container mx-auto px-4">
+            <h2 class="text-3xl md:text-4xl font-bold text-center mb-12">Family-Focused Features</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="border-2 border-black p-6 bg-white rounded-lg shadow-[4px_4px_0_0_rgba(0,0,0,1)] hover:shadow-[8px_8px_0_0_rgba(0,0,0,1)] transition-all">
+                    <h3 class="text-xl font-bold mb-3">Create Family Groups</h3>
+                    <p>Organize your extended family with customizable groups for different branches and generations.</p>
+                </div>
+                
+                <div class="border-2 border-black p-6 bg-[#FFDE59] rounded-lg shadow-[4px_4px_0_0_rgba(0,0,0,1)] hover:shadow-[8px_8px_0_0_rgba(0,0,0,1)] transition-all">
+                    <h3 class="text-xl font-bold mb-3">Share Memories & Posts</h3>
+                    <p>Private timeline for sharing photos, stories, and milestones with just your family members.</p>
+                </div>
+                
+                <div class="border-2 border-black p-6 bg-white rounded-lg shadow-[4px_4px_0_0_rgba(0,0,0,1)] hover:shadow-[8px_8px_0_0_rgba(0,0,0,1)] transition-all">
+                    <h3 class="text-xl font-bold mb-3">Event Management</h3>
+                    <p>Coordinate reunions, birthdays, and anniversaries with shared calendars and RSVPs.</p>
+                </div>
+                
+                <div class="border-2 border-black p-6 bg-[#FFDE59] rounded-lg shadow-[4px_4px_0_0_rgba(0,0,0,1)] hover:shadow-[8px_8px_0_0_rgba(0,0,0,1)] transition-all">
+                    <h3 class="text-xl font-bold mb-3">Document Vault</h3>
+                    <p>Securely store and share important family documents like Aadhaar, property papers, and wills.</p>
+                </div>
+                
+                <div class="border-2 border-black p-6 bg-[#A0C4FF] rounded-lg shadow-[4px_4px_0_0_rgba(0,0,0,1)] hover:shadow-[8px_8px_0_0_rgba(0,0,0,1)] transition-all">
+                    <h3 class="text-xl font-bold mb-3">Finance Tracking</h3>
+                    <p>Manage family funds, subscriptions, and shared expenses with transparency.</p>
+                </div>
+                
+                <div class="border-2 border-black p-6 bg-[#FFDE59] rounded-lg shadow-[4px_4px_0_0_rgba(0,0,0,1)] hover:shadow-[8px_8px_0_0_rgba(0,0,0,1)] transition-all">
+                    <h3 class="text-xl font-bold mb-3">Privacy Controls</h3>
+                    <p>Granular permissions to control exactly who sees what within your family network.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="about" class="py-16 container mx-auto px-4">
+        <div class="max-w-3xl mx-auto text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-8">More Than Social Media</h2>
+            <p class="text-lg leading-relaxed">
+                FamilyConnect is designed specifically for multigenerational families who want to preserve their legacy in the digital age. Unlike mainstream social networks, we prioritize long-term memory preservation, private communication, and family organization tools. Our platform helps you build a living archive of your family's history while making it easy to stay connected across distances and generations.
+            </p>
+        </div>
+    </section>
+
+    <section id="cta" class="bg-[#FFDE59] border-t-2 border-b-2 border-black py-16">
+        <div class="container mx-auto px-4 text-center">
+            <h2 class="text-3xl md:text-4xl font-bold mb-6">Ready to Strengthen Your Family Bond?</h2>
+            <p class="text-xl mb-8 max-w-2xl mx-auto">Join thousands of families preserving their legacy on FamilyConnect.</p>
+            
+            <a href="{% url 'users:login' %}"
+             class="border-2 border-black px-8 py-3 text-lg font-bold bg-white rounded-lg  transition shadow-[4px_4px_0_0_rgba(0,0,0,1)] hover:shadow-[2px_2px_0_0_rgba(0,0,0,1)]">
+                Create Account
+            </a>
+        </div>
+    </section>
+
+    <footer class="bg-[#6B4226] text-white py-8 border-t-2 border-black">
+        <div class="container mx-auto px-4 text-center">
+            <p>© 2023 FamilyConnect. All rights reserved.</p>
+        </div>
+    </footer>
+{% endblock %}

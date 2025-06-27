@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5 text-center">
+    <h2 class="mb-4 text-danger">Delete Group: {{ group.group_name }}</h2>
+    <p>Are you sure you want to <strong>permanently delete</strong> this group? This action cannot be undone.</p>
+    
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger me-2">Yes, Delete</button>
+        <a href="{% url 'groups:group_dashboard' group_id=group.id %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

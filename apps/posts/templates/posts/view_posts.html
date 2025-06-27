@@ -1,0 +1,373 @@
+{% extends "base.html" %}
+{% load static humanize %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 sm:px-0 py-6 space-y-6">
+  {% for item in post_data %}
+  <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200 border border-gray-100 overflow-hidden">
+    <!-- Post Header -->
+    <div class="p-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center space-x-3">
+          <div class="relative">
+            <img
+              class="w-10 h-10 rounded-full object-cover"
+              src="{{ item.post.created_by_user.profile.avatar.url|default:'/static/images/default-avatar.png' }}"
+              alt="Avatar"
+              width="40"
+              height="40"
+              loading="lazy"
+              onerror="this.onerror=null;this.src='/static/images/default-avatar.png'"
+            >
+            {% if item.post.created_by_user.is_active %}
+            <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white"></span>
+            {% endif %}
+          </div>
+          <div>
+            <h3 class="font-semibold text-gray-900 text-sm flex items-center">
+              {{ item.post.created_by_user.get_full_name }}
+              <span class="text-gray-500 text-xs ml-2">@{{ item.post.created_by_user.username }}</span>
+            </h3>
+            <div class="flex items-center text-xs text-gray-500 space-x-2">
+              <span>{{ item.post.created_at|naturaltime }}</span>
+              <span>·</span>
+              {% if item.post.post_type == 'PRIVATE' %}
+                <i class="fas fa-lock text-gray-400"></i>
+                <span>Private</span>
+              {% elif item.post.post_type == 'PUBLIC' %}
+                <i class="fas fa-globe text-gray-400"></i>
+                <span>Public</span>
+              {% else %}
+                <i class="fas fa-users text-gray-400"></i>
+                <span>Group</span>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        
+ {% if item.can_delete %}
+<div x-data="{ 
+    open: false, 
+    confirming: false,
+    init() {
+        // JavaScript fallback for animations
+        this.$watch('open', (value) => {
+            if (value) {
+                this.animateOpen();
+            } else {
+                this.animateClose();
+            }
+        });
+    },
+    animateOpen() {
+        const menu = this.$refs.menu;
+        menu.style.opacity = '0';
+        menu.style.transform = 'scale(0.95)';
+        menu.style.display = 'block';
+        
+        requestAnimationFrame(() => {
+            menu.style.transition = 'all 150ms ease-out';
+            menu.style.opacity = '1';
+            menu.style.transform = 'scale(1)';
+        });
+    },
+    animateClose() {
+        const menu = this.$refs.menu;
+        menu.style.transition = 'all 75ms ease-in';
+        menu.style.opacity = '0';
+        menu.style.transform = 'scale(0.95)';
+        
+        setTimeout(() => {
+            if (!this.open) {
+                menu.style.display = 'none';
+            }
+        }, 75);
+    }
+}" class="relative">
+  
+  <!-- Options button -->
+  <button 
+    @click="open = !open" 
+    class="text-gray-400 hover:text-gray-600 p-1 rounded-full transition-transform duration-150 hover:scale-110"
+    :class="{ 'text-gray-600': open }"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+      <path d="M6 10a2 2 0 11-4 0 2 2 0 014 0zM12 10a2 2 0 11-4 0 2 2 0 014 0zM16 12a2 2 0 100-4 2 2 0 000 4z" />
+    </svg>
+  </button>
+
+  <!-- Dropdown menu -->
+  <div 
+    x-ref="menu"
+    x-show="open"
+    x-transition:enter="transition ease-out duration-100"
+    x-transition:enter-start="transform opacity-0 scale-95"
+    x-transition:enter-end="transform opacity-100 scale-100"
+    x-transition:leave="transition ease-in duration-75"
+    x-transition:leave-start="transform opacity-100 scale-100"
+    x-transition:leave-end="transform opacity-0 scale-95"
+    @click.away="open = false; confirming = false"
+    style="display: none;"
+    class="absolute right-0 mt-2 w-56 bg-white rounded-md shadow-lg py-1 z-10 border border-gray-100 divide-y divide-gray-100"
+  >
+    <!-- Rest of your dropdown content remains the same -->
+    <template x-if="!confirming">
+      <button 
+        @click="confirming = true" 
+        class="w-full text-left px-4 py-2 text-sm text-red-500 hover:bg-gray-50 flex items-center transition-colors"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+        </svg>
+        Delete Post
+      </button>
+    </template>
+
+    <div x-show="confirming" x-collapse class="px-3 py-2 space-y-2">
+      <p class="text-xs text-gray-600">Are you sure you want to delete this post?</p>
+      
+      {% if item.post.media_attachments %}
+      <div class="border rounded overflow-hidden max-h-20">
+        <img 
+          src="{{ item.post.media_attachments.0 }}" 
+          alt="Post media" 
+          class="w-full h-full object-cover"
+          onerror="this.style.display='none'"
+        >
+      </div>
+      {% endif %}
+      
+      <div class="flex space-x-2 pt-1">
+        <form method="POST" action="{% url 'posts:delete_post' item.post.post_id %}" class="flex-1">
+          {% csrf_token %}
+          <button 
+            type="submit" 
+            class="w-full px-3 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600 transition-colors flex items-center justify-center"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+            </svg>
+            Confirm
+          </button>
+        </form>
+        <button 
+          @click="confirming = false; open = false" 
+          class="px-3 py-1 bg-gray-100 text-gray-700 text-xs rounded hover:bg-gray-200 transition-colors"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+      </div>
+    </div>
+
+    <!-- Post Content -->
+    <div class="px-4 pb-3">
+      <p class="text-gray-800 text-sm whitespace-pre-line leading-relaxed">
+        {{ item.post.content }}
+      </p>
+    </div>
+
+    <!-- Media Gallery -->
+    {% if item.post.media_attachments %}
+    <div class="media-gallery  grid gap-1 p-1 
+      {% if item.post.media_attachments|length == 1 %}grid-cols-1{% endif %}
+      {% if item.post.media_attachments|length == 2 %}grid-cols-2{% endif %}
+      {% if item.post.media_attachments|length == 3 %}grid-cols-2{% endif %}
+      {% if item.post.media_attachments|length >= 4 %}grid-cols-2{% endif %}">
+      {% for media in item.post.media_attachments|slice:":4" %}
+      <a href="{{ media }}" target="_blank" class="block overflow-hidden rounded-lg relative group">
+        <img
+          src="{{ media }}"
+          alt="Media"
+          class="w-full h-48 sm:h-64 object-contain transition-transform duration-300 group-hover:scale-105"
+          loading="lazy"
+          width="600"
+          height="400"
+        >
+        {% if forloop.last and item.post.media_attachments|length > 4 %}
+        <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
+          <span class="text-white font-medium text-lg">+{{ item.post.media_attachments|length|add:"-4" }}</span>
+        </div>
+        {% endif %}
+      </a>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Post Stats -->
+    <div class="px-4 py-2 border-t border-gray-100 text-xs text-gray-500 flex items-center space-x-4">
+      {% if item.like_count > 0 %}
+      <span class="flex items-center space-x-1">
+        <div class="flex -space-x-1">
+          {% for like in item.recent_likes|slice:":3" %}
+          <img class="w-5 h-5 rounded-full border-2 border-white" 
+               src="{{ like.user.profile.avatar.url|default:'/static/images/default-avatar.png' }}" 
+               alt="{{ like.user.get_full_name }}"
+               loading="lazy">
+          {% endfor %}
+        </div>
+        <span>{{ item.like_count|intcomma }} like{{ item.like_count|pluralize }}</span>
+      </span>
+      {% endif %}
+      {% if item.comment_count > 0 %}
+      <span>{{ item.comment_count }} comment{{ item.comment_count|pluralize }}</span>
+      {% endif %}
+    </div>
+
+    <!-- Post Actions -->
+    <div class="px-4 py-2 border-t border-gray-100 grid grid-cols-2 gap-4">
+      <form method="POST" action="{% url 'posts:toggle_like' item.post.post_id %}" class="w-full">
+        {% csrf_token %}
+        <button type="submit" class="w-full flex items-center justify-center space-x-2 text-sm text-gray-700 hover:text-red-500 transition-colors">
+          {% if item.user_has_liked %}
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-red-500" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd" />
+            </svg>
+            <span>Liked</span>
+          {% else %}
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+            </svg>
+            <span>Like</span>
+          {% endif %}
+        </button>
+      </form>
+      
+      <button class="flex items-center justify-center space-x-2 text-sm text-gray-700 hover:text-blue-500 transition-colors comment-toggle">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+        </svg>
+        <span>Comment</span>
+      </button>
+    </div>
+
+    <!-- Comments Section -->
+    <div class="comment-section border-t border-gray-100 max-h-0 overflow-hidden transition-all duration-300">
+      <!-- Existing Comments -->
+      <div class="px-4 py-3 space-y-3">
+        <!-- Comments Section -->
+
+    <!-- Inside your comments section -->
+{% for comment in item.comments %}
+    <div class="flex items-start space-x-3 group relative">  <!-- Ensure relative is here -->
+      <img
+        src="{{ comment.comment.author.profile.avatar.url|default:'/static/images/default-avatar.png' }}"
+        alt="Avatar"
+        class="w-8 h-8 rounded-full object-cover flex-shrink-0"
+        width="32"
+        height="32"
+        loading="lazy"
+      >
+      <div class="flex-1 min-w-0 relative">  <!-- Added relative here -->
+        <div class="bg-gray-50 rounded-lg p-3">
+          <div class="flex justify-between items-start">
+            <span class="font-medium text-sm truncate">{{ comment.comment.author.get_full_name }}</span>
+            {% if comment.can_delete %}
+            <form method="POST" action="{% url 'posts:delete_comment' comment.comment.id %}" class="ml-2">
+              {% csrf_token %}
+              <button 
+                type="submit" 
+                class="text-gray-400 hover:text-red-500 transition-colors  group-hover:opacity-100 absolute right-2 top-2"
+                title="Delete comment"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+              </button>
+            </form>
+            
+            {% endif %}
+          </div>
+          <p class="text-sm text-gray-800 mt-1 break-words">{{ comment.comment.content }}</p>
+        </div>
+        <span class="text-xs text-gray-400">{{ comment.comment.created_at|naturaltime }}</span>
+        
+      </div>
+    </div>
+    {% endfor %}
+  
+      </div>
+
+      <!-- Add Comment Form -->
+      <form method="POST" action="{% url 'posts:add_comment' item.post.post_id %}" class="px-4 py-3 border-t border-gray-100 flex items-start space-x-2">
+        {% csrf_token %}
+        <img
+          src="{{ request.user.profile.avatar.url|default:'/static/images/default-avatar.png' }}"
+          alt="Avatar"
+          class="w-8 h-8 rounded-full object-cover flex-shrink-0"
+          width="32"
+          height="32"
+          loading="lazy"
+        >
+        <div class="flex-1 relative">
+          <input
+            type="text"
+            name="content"
+            required
+            placeholder="Write a comment..."
+            class="w-full px-4 py-2 text-sm rounded-full bg-gray-50 border-none focus:ring-2 focus:ring-blue-500 focus:bg-white pr-10"
+          >
+          <button type="submit" class="absolute right-2 top-1/2 transform -translate-y-1/2 text-blue-500 hover:text-blue-700">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 0l-3 3a1 1 0 001.414 1.414L9 9.414V13a1 1 0 102 0V9.414l1.293 1.293a1 1 0 001.414-1.414z" clip-rule="evenodd" />
+            </svg>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  {% empty %}
+  <div class="text-center py-16">
+    <div class="mx-auto w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+      </svg>
+    </div>
+    <h3 class="text-gray-800 text-lg font-medium">No posts yet</h3>
+    <p class="text-gray-500 text-sm mt-1">Be the first to share something with your community!</p>
+    <a href="{% url 'posts:create_post' %}" class="mt-4 inline-block px-6 py-2 bg-blue-500 text-white rounded-full text-sm font-medium hover:bg-blue-600 transition-colors">
+      Create Post
+    </a>
+  </div>
+  {% endfor %}
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Toggle comments section
+  document.querySelectorAll('.comment-toggle').forEach(button => {
+    button.addEventListener('click', function() {
+      const commentSection = this.closest('.border-t').nextElementSibling;
+      if (commentSection.style.maxHeight) {
+        commentSection.style.maxHeight = null;
+      } else {
+        commentSection.style.maxHeight = commentSection.scrollHeight + 'px';
+      }
+    });
+  });
+
+  // Like button animation
+  document.querySelectorAll('form[action*="toggle_like"] button').forEach(button => {
+    button.addEventListener('click', function(e) {
+      if (!this.querySelector('svg.text-red-500')) {
+        this.querySelector('svg').classList.add('animate-bounce');
+        setTimeout(() => {
+          this.querySelector('svg').classList.remove('animate-bounce');
+        }, 1000);
+      }
+    });
+  });
+
+  // Error handling for images
+  document.querySelectorAll('img').forEach(img => {
+    img.addEventListener('error', function() {
+      this.src = '/static/images/default-avatar.png';
+    });
+  });
+});
+</script>
+{% endblock %}

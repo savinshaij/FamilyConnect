@@ -1,0 +1,223 @@
+{% extends 'base.html' %} {% load static %} {% block content %}
+<div class="flex h-screen bg-white md:pr-6 " x-data="{ openTab: '{{ active_tab }}' }">
+  <!-- Left Sidebar -->
+{% load static %}
+
+
+
+
+
+
+
+
+
+{% include 'groups/components/mobile_sidebar.html' %}
+
+
+
+
+<div class="hidden md:flex md:flex-shrink-0">
+  <div class="flex  flex-col w-64   ">
+
+   
+    <div class="flex items-center justify-center py-5 h-16 px-4 ">
+      <h1 class="text-xl font-extrabold text-black tracking-tight uppercase select-none">
+        FamilyConnect
+      </h1>
+    </div>
+
+   
+    <nav class="flex-1 px-2 py-4 space-y-1 overflow-y-auto">
+        <a
+        @click="openTab = 'home'"
+        
+        href="{% url 'core:home' %}"
+        class="w-full text-left rounded-xl flex items-center px-4 py-3 text-sm font-semibold transition-all duration-150"
+      >
+        <i :class="openTab === 'home' ? 'fas fa-home mr-3 text-white' : 'fas fa-home mr-3 text-black'"></i>
+        Home
+      </a>
+     
+      <a
+        @click="openTab = 'posts'"
+        :class="openTab === 'posts'
+          ? 'bg-black text-white '
+          : 'text-black hover:bg-gray-200  hover:border-black'"
+        href="?tab=posts"
+        class="w-full text-left rounded-xl flex items-center px-4 py-3 text-sm font-semibold transition-all duration-150"
+      >
+        <i :class="openTab === 'posts' ? 'fas fa-newspaper mr-3 text-white' : 'fas fa-newspaper mr-3 text-black'"></i>
+        Posts
+      </a>
+
+     
+      <a
+        @click="openTab = 'events'"
+        :class="openTab === 'events'
+          ? 'bg-black text-white '
+          : 'text-black hover:bg-gray-200  hover:border-black'"
+        href="?tab=events"
+        class="w-full text-left rounded-xl flex items-center px-4 py-3 text-sm font-semibold transition-all duration-150"
+      >
+        <i :class="openTab === 'events' ? 'fas fa-calendar-alt mr-3 text-white' : 'fas fa-calendar-alt mr-3 text-black'"></i>
+        Events
+      </a>
+
+     
+      <a
+        @click="openTab = 'finance'"
+        :class="openTab === 'finance'
+          ? 'bg-black text-white '
+          : 'text-black hover:bg-gray-200  hover:border-black'"
+        href="?tab=finance"
+        class="w-full text-left rounded-xl flex items-center px-4 py-3 text-sm font-semibold transition-all duration-150"
+      >
+        <i :class="openTab === 'finance' ? 'fas fa-wallet mr-3 text-white' : 'fas fa-wallet mr-3 text-black'"></i>
+        Finance
+      </a>
+
+     
+      <a
+        @click="openTab = 'memories'"
+        :class="openTab === 'memories'
+          ? 'bg-black text-white '
+          : 'text-black hover:bg-gray-200  hover:border-black'"
+        href="?tab=memories"
+        class="w-full text-left rounded-xl flex items-center px-4 py-3 text-sm font-semibold transition-all duration-150"
+      >
+        <i :class="openTab === 'memories' ? 'fas fa-images mr-3 text-white' : 'fas fa-images mr-3 text-black'"></i>
+        Memories
+      </a>
+            <a
+        @click="openTab = 'documents'"
+        :class="openTab === 'documents'
+          ? 'bg-black text-white '
+          : 'text-black hover:bg-gray-200  hover:border-black'"
+        href="?tab=documents"
+        class="w-full text-left rounded-xl flex items-center px-4 py-3 text-sm font-semibold transition-all duration-150"
+      >
+        <i :class="openTab === 'documents' ? 'fas fa-images mr-3 text-white' : 'fas fa-images mr-3 text-black'"></i>
+        Documents
+      </a>
+
+      
+
+    </nav>
+
+    
+    <div class="flex items-center border border-2 my-6 mx-3 rounded-xl border-black p-3 mt-auto ">
+      <img
+        class="w-10 h-10 rounded-full border-2 border-black shadow-[2px_2px_0_#000] object-cover"
+        src="{% static 'images/user.jpg' %}"
+        alt="User"
+      />
+      <div class="ml-3">
+        <p class="text-sm   font-bold text-black">
+          {{ request.user.username }}
+        </p>
+        
+             <div>
+              <p class="text-xs   text-gray-800">{{ request.user.role }}</p>
+             
+            </div>
+       
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <div class="flex flex-col md:p-6 pl-0  bg-white  flex-1 overflow-hidden">
+   
+    <header
+      class="md:hidden flex items-center justify-between px-4 py-3  border-b border-gray-200"
+    >
+      
+      
+      <div class="w-6 h-10"></div>
+    </header>
+
+
+
+    
+    <div class="flex-1 bg-[#fff7e4] md:p-10 justify-center item-center scrollbar-hidden overflow-y-scroll border border-black border-2 md:rounded-3xl  ">
+      
+      
+      {% if active_tab == 'posts' %}
+        {% include 'groups/tabs/posts.html' %}
+      {% elif active_tab == 'events' %}
+        {% include 'groups/tabs/events.html' %}
+      {% elif active_tab == 'finance' %}
+        {% include 'groups/tabs/finance.html' %}
+      {% elif active_tab == 'memories' %}
+        {% include 'groups/tabs/memories.html' %}
+      {% elif active_tab == 'add_post' %}
+        {% include 'groups/tabs/add_post.html' %}
+      {% elif active_tab == 'add_event' %}
+        {% include 'groups/tabs/add_event.html' %}
+      {% elif active_tab == 'add_finance' %}
+        {% include 'groups/tabs/add_finance.html' %}
+      {% elif active_tab == 'add_memory' %}
+    {% include 'groups/tabs/add_memory.html' %}
+      {% elif active_tab == 'add_document' %}
+        {% include 'groups/tabs/add_document.html' %}
+      {% elif active_tab == 'documents' %}
+        {% include 'groups/tabs/documents.html' %}
+      {% endif %}
+
+
+    </div>
+    
+  </div>
+{% include 'groups/components/group_info.html' %}
+{% include 'groups/components/group_info_mobile.html' %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const sidebar = document.getElementById('groupSidebar');
+  const toggleButton = document.getElementById('groupSidebarToggle');
+  const overlay = document.getElementById('sidebarOverlay');
+  
+  toggleButton.addEventListener('click', function() {
+    sidebar.classList.toggle('translate-x-full');
+    sidebar.classList.toggle('translate-x-0');
+    overlay.classList.toggle('hidden');
+  });
+  
+  overlay.addEventListener('click', function() {
+    sidebar.classList.add('translate-x-full');
+    sidebar.classList.remove('translate-x-0');
+    overlay.classList.add('hidden');
+  });
+});
+</script>
+   
+</div>
+{% endblock %} {% block extra_js %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    
+    if (typeof Alpine !== "undefined") {
+        Alpine.start();
+    }
+
+   
+    document.querySelectorAll("[x-data]").forEach((el) => {
+        el.__x.$watch("openTab", (tab) => {
+            const urls = {
+                posts: "{% url 'groups:group_posts' group.id %}",
+                events: "{% url 'groups:group_events' group.id %}",
+                finance: "{% url 'groups:group_finance' group.id %}",
+                memories: "{% url 'groups:group_memories' group.id %}",
+            };
+            if (urls[tab]) {
+                history.pushState({ tab: tab }, "", urls[tab]);
+            }
+        });
+    });
+
+   
+
+});
+</script>
+{% endblock %}

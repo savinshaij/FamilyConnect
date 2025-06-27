@@ -1,0 +1,50 @@
+<div class="  px-4 py-3 flex justify-end sm:px-6">
+  <div class="flex flex-col space-y-3 sm:space-y-0 sm:flex-row sm:items-center sm:justify-between w-full max-w-3xl">
+
+    <!-- Search box -->
+    <div class="relative flex items-center w-full max-w-sm border-2 border-black rounded-md shadow-[2px_2px_0_#000] bg-white">
+      <input
+        type="text"
+        placeholder="Search here..."
+        class="w-full pl-3 pr-8 py-2 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-transparent text-sm"
+      />
+      <button class="absolute right-0 mr-2 text-black hover:text-indigo-700 transition-colors duration-150">
+        <i class="fas fa-search text-base"></i>
+      </button>
+    </div>
+
+    
+    <a href="?tab=add_event"
+      class="flex items-center justify-center px-4 py-2 border-2 border-black rounded-lg bg-[#FFDE59] shadow-[2px_2px_0_#000] hover:bg-[#F0E6D2] transition-colors duration-150 select-none uppercase font-semibold tracking-wide text-black text-sm"
+      >
+      Add Event
+    </a>
+  </div>
+</div>
+<div class="space-y-6 px-4 py-8">
+    {% for event in events %}
+    <div class="border-2 border-black p-6 bg-white shadow-[6px_6px_0_#000] rounded-lg">
+        <h2 class="text-xl font-extrabold border-b-2 border-black pb-2 mb-3 text-gray-900 uppercase tracking-wide">
+            {{ event.event_name }}
+        </h2>
+        <p class="text-base text-gray-800 mb-3">{{ event.description }}</p>
+        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between text-sm text-gray-700 font-medium">
+            <p>
+                <span class="inline-block font-bold text-gray-900">When:</span>
+                {{ event.start_time|date:"M d, Y H:i" }}
+                {% if event.end_time %}
+                    – {{ event.end_time|date:"M d, Y H:i" }}
+                {% endif %}
+            </p>
+            <p class="mt-2 sm:mt-0">
+                <span class="inline-block font-bold text-gray-900">Where:</span>
+                {{ event.location }}
+            </p>
+        </div>
+    </div>
+    {% empty %}
+    <div class="border-2 border-black p-6 bg-[#E3F2FD] shadow-[6px_6px_0_#000] rounded-lg">
+        <p class="text-gray-800 font-medium">No upcoming events.</p>
+    </div>
+    {% endfor %}
+</div>

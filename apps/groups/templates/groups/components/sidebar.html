@@ -1,0 +1,94 @@
+{% load static %}
+<div x-data="{ openTab: 1 }" class="hidden md:flex md:flex-shrink-0">
+  <div class="flex flex-col w-64
+              border-r-8 border-black
+              
+              shadow-[10px_10px_0_#000]">
+
+    <!-- Sidebar header -->
+    <div class="flex items-center justify-center h-16 px-6 border-b-8 border-black bg-[#FFF8E1]">
+      <h1 class="text-xl font-extrabold uppercase tracking-wide text-black drop-shadow-[2px_2px_0_#000] select-none">
+        FamilyConnect
+      </h1>
+    </div>
+
+    <!-- Sidebar navigation -->
+    <nav class="flex-1 px-4 py-8 space-y-3 overflow-y-auto
+                bg-[#F7F7F7]
+                border-t-8 border-black">
+
+      <button
+        x-on:click="openTab = 1"
+        :class="openTab === 1
+          ? 'bg-[#D1D1D1] text-black border-l-8 border-black shadow-[6px_6px_0_#000]'
+          : 'text-gray-700 hover:bg-[#DDDDDD] hover:text-black border-l-8 border-transparent'"
+        class="w-full text-left flex items-center px-5 py-4 text-base font-extrabold
+               border-l-8
+               transition-all duration-150
+               rounded-none
+               select-none"
+      >
+        <i :class="openTab === 1 ? 'fas fa-newspaper mr-4 text-black' : 'fas fa-newspaper mr-4 text-gray-500'"></i>
+        Posts
+      </button>
+
+      <button
+        x-on:click="openTab = 2"
+        :class="openTab === 2
+          ? 'bg-[#D1D1D1] text-black border-l-8 border-black shadow-[6px_6px_0_#000]'
+          : 'text-gray-700 hover:bg-[#DDDDDD] hover:text-black border-l-8 border-transparent'"
+        class="w-full text-left flex items-center px-5 py-4 text-base font-extrabold
+               border-l-8
+               transition-all duration-150
+               rounded-none
+               select-none"
+      >
+        <i :class="openTab === 2 ? 'fas fa-calendar-alt mr-4 text-black' : 'fas fa-calendar-alt mr-4 text-gray-500'"></i>
+        Events
+      </button>
+
+      <button
+        x-on:click="openTab = 3"
+        :class="openTab === 3
+          ? 'bg-[#D1D1D1] text-black border-l-8 border-black shadow-[6px_6px_0_#000]'
+          : 'text-gray-700 hover:bg-[#DDDDDD] hover:text-black border-l-8 border-transparent'"
+        class="w-full text-left flex items-center px-5 py-4 text-base font-extrabold
+               border-l-8
+               transition-all duration-150
+               rounded-none
+               select-none"
+      >
+        <i :class="openTab === 3 ? 'fas fa-wallet mr-4 text-black' : 'fas fa-wallet mr-4 text-gray-500'"></i>
+        Finance
+      </button>
+
+      <button
+        x-on:click="openTab = 4"
+        :class="openTab === 4
+          ? 'bg-[#D1D1D1] text-black border-l-8 border-black shadow-[6px_6px_0_#000]'
+          : 'text-gray-700 hover:bg-[#DDDDDD] hover:text-black border-l-8 border-transparent'"
+        class="w-full text-left flex items-center px-5 py-4 text-base font-extrabold
+               border-l-8
+               transition-all duration-150
+               rounded-none
+               select-none"
+      >
+        <i :class="openTab === 4 ? 'fas fa-images mr-4 text-black' : 'fas fa-images mr-4 text-gray-500'"></i>
+        Memories
+      </button>
+    </nav>
+
+    <!-- User profile -->
+    <div class="flex items-center p-5 mt-auto border-t-8 border-black bg-[#FFF8E1]">
+      <img
+        class="w-12 h-12 rounded-none border-4 border-black shadow-[4px_4px_0_#000] select-none"
+        src="{% static 'images/user.jpg' %}"
+        alt="User"
+      />
+      <div class="ml-4">
+        <p class="text-base font-extrabold text-black select-none">John Doe</p>
+        <p class="text-xs font-bold text-black/70 select-none">Admin</p>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,349 @@
+{% load static %}
+
+
+<div class="overflow-y-scroll px-4 py-8">
+  <div class="rounded-xl border-2 border-black p-6 bg-white shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+    <div class="mb-8">
+      <h2 class="text-3xl font-bold text-gray-900 leading-tight">
+        CREATE NEW POST
+      </h2>
+      <p class="text-gray-600 mt-2 text-lg font-medium">
+        Share updates with your family group
+      </p>
+    </div>
+
+    <form method="post" class="space-y-8" enctype="multipart/form-data" id="post-form">
+      {% csrf_token %}
+
+   
+
+      
+<div class="mb-8">
+  <label class="block text-xl font-bold mb-3">WHO CAN SEE THIS?</label>
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+    
+    <div>
+      <input
+        type="radio"
+        name="post_type"
+        id="id_post_type_group"
+        value="GROUP_SPECIFIC"
+        class="peer hidden"
+        checked
+      />
+      <label
+        for="id_post_type_group"
+        class="block p-4 border-2 border-black rounded-xl cursor-pointer transition-all peer-checked:bg-indigo-100 peer-checked:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+      >
+        <div class="font-bold text-gray-900">GROUP MEMBERS</div>
+        <div class="text-gray-600 mt-1 text-sm">Visible to group members</div>
+      </label>
+    </div>
+
+    
+    <div>
+      <input
+        type="radio"
+        name="post_type"
+        id="id_post_type_public"
+        value="PUBLIC"
+        class="peer hidden"
+      />
+      <label
+        for="id_post_type_public"
+        class="block p-4 border-2 border-black rounded-xl cursor-pointer transition-all peer-checked:bg-green-100 peer-checked:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+      >
+        <div class="font-bold text-gray-900">PUBLIC</div>
+        <div class="text-gray-600 mt-1 text-sm">Visible to all</div>
+      </label>
+    </div>
+
+ 
+    <div>
+      <input
+        type="radio"
+        name="post_type"
+        id="id_post_type_private"
+        value="PRIVATE"
+        class="peer hidden"
+      />
+      <label
+        for="id_post_type_private"
+        class="block p-4 border-2 border-black rounded-xl cursor-pointer transition-all peer-checked:bg-pink-100 peer-checked:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] hover:shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]"
+      >
+        <div class="font-bold text-gray-900">PRIVATE</div>
+        <div class="text-gray-600 mt-1 text-sm">Only visible to you</div>
+      </label>
+    </div>
+
+  </div>
+</div>
+
+
+      
+      <div class="mb-8">
+        <label for="id_content" class="block text-xl font-bold mb-3">
+          WHAT'S ON YOUR MIND?
+        </label>
+        <textarea
+          name="content"
+          id="id_content"
+          required
+          class="block w-full px-4 py-3 border-2 border-black rounded-xl text-gray-900 bg-gray-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 min-h-40 resize-y placeholder-gray-400"
+          placeholder="Share your thoughts..."
+        ></textarea>
+        <div class="flex justify-between mt-2">
+          <span class="text-sm text-gray-600">Minimum 10 characters</span>
+          <span id="char-count" class="text-sm font-medium">0/2000</span>
+        </div>
+      </div>
+
+
+<div class="mb-8">
+  <label class="block text-xl font-bold mb-3">
+    ADD PHOTOS (OPTIONAL)
+  </label>
+  <div
+    id="drop-zone"
+    class="flex justify-center px-6 pt-8 pb-8 border-2 border-dashed border-black rounded-xl bg-gray-50 hover:bg-indigo-50 transition-colors"
+  >
+    <div class="space-y-3 text-center">
+      <svg
+        class="mx-auto h-16 w-16 text-gray-500"
+        stroke="currentColor"
+        fill="none"
+        viewBox="0 0 48 48"
+        aria-hidden="true"
+      >
+        <path
+          d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+      <div class="flex text-base justify-center">
+        <label
+          for="file-upload"
+          class="relative cursor-pointer font-bold text-indigo-600 hover:text-indigo-800"
+        >
+          <span>UPLOAD PHOTOS</span>
+          <input
+            id="file-upload"
+            name="media_attachments"
+            type="file"
+            class="sr-only"
+            multiple
+            accept="image/*"
+          />
+        </label>
+        <p class="pl-1 text-gray-700">or drag and drop</p>
+      </div>
+      <p id="file-info-text" class="text-xs text-gray-500">
+        PNG, JPG up to 5MB each (max 10 files)
+      </p>
+    </div>
+  </div>
+  
+
+  <div id="file-list-container" class="mt-4 space-y-3 hidden">
+   
+  </div>
+</div>
+
+
+      <!-- Form Actions -->
+      <div class="flex items-center justify-between pt-6 border-t-2 border-black">
+        <a
+          href="{% url 'posts:view_posts' group.id %}"
+          class="inline-flex items-center justify-center px-6 py-3 rounded-xl font-bold border-2 border-black bg-gray-100 hover:bg-gray-200 hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5 mr-2"
+            viewBox="0 0 20 20"
+            fill="currentColor"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z"
+              clip-rule="evenodd"
+            />
+          </svg>
+          CANCEL
+        </a>
+        <button
+          type="submit"
+          id="submit-btn"
+          class="inline-flex items-center justify-center px-6 py-3 rounded-xl font-bold border-2 border-black bg-indigo-600 text-white hover:bg-indigo-700 hover:shadow-[3px_3px_0px_0px_rgba(0,0,0,1)] transition-all"
+        >
+          <span id="submit-text">POST</span>
+          <svg
+            id="submit-spinner"
+            class="hidden animate-spin ml-2 h-5 w-5 text-white"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              class="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              stroke-width="4"
+            ></circle>
+            <path
+              class="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            ></path>
+          </svg>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+  const MAX_FILE_COUNT = 10;
+  const fileInput = document.getElementById('file-upload');
+  const dropZone = document.getElementById('drop-zone');
+  const fileInfoText = document.getElementById('file-info-text');
+  const fileListContainer = document.getElementById('file-list-container');
+  let selectedFiles = [];
+
+  // Drag and drop handlers
+  ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    dropZone.addEventListener(eventName, preventDefaults, false);
+  });
+
+  ['dragenter', 'dragover'].forEach(eventName => {
+    dropZone.addEventListener(eventName, highlight, false);
+  });
+
+  ['dragleave', 'drop'].forEach(eventName => {
+    dropZone.addEventListener(eventName, unhighlight, false);
+  });
+
+  function preventDefaults(e) {
+    e.preventDefault();
+    e.stopPropagation();
+  }
+
+  function highlight() {
+    dropZone.classList.add('border-indigo-500', 'bg-indigo-100');
+  }
+
+  function unhighlight() {
+    dropZone.classList.remove('border-indigo-500', 'bg-indigo-100');
+  }
+
+  dropZone.addEventListener('drop', handleDrop, false);
+
+  function handleDrop(e) {
+    const dt = e.dataTransfer;
+    const files = dt.files;
+    handleFiles(files);
+  }
+
+  // File input change handler
+  fileInput.addEventListener('change', function() {
+    handleFiles(this.files);
+  });
+
+  // Handle selected files
+  function handleFiles(files) {
+    if (selectedFiles.length + files.length > MAX_FILE_COUNT) {
+      alert(`You can upload a maximum of ${MAX_FILE_COUNT} files`);
+      return;
+    }
+
+    // Filter to only accept images and check size
+    const validFiles = Array.from(files).filter(file => {
+      if (!file.type.startsWith('image/')) {
+        alert(`File ${file.name} is not an image`);
+        return false;
+      }
+      if (file.size > MAX_FILE_SIZE) {
+        alert(`File ${file.name} is too large (max 5MB)`);
+        return false;
+      }
+      return true;
+    });
+
+    selectedFiles = [...selectedFiles, ...validFiles];
+    updateFileListDisplay();
+  }
+
+  // Update file list display
+  function updateFileListDisplay() {
+    fileListContainer.innerHTML = '';
+
+    if (selectedFiles.length === 0) {
+      fileListContainer.classList.add('hidden');
+      fileInfoText.textContent = 'PNG, JPG up to 5MB each (max 10 files)';
+      return;
+    }
+
+    fileListContainer.classList.remove('hidden');
+    fileInfoText.textContent = `${selectedFiles.length} photo(s) selected (max ${MAX_FILE_COUNT})`;
+
+    // Create a grid container for the previews
+    const previewGrid = document.createElement('div');
+    previewGrid.className = 'grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3';
+    fileListContainer.appendChild(previewGrid);
+
+    selectedFiles.forEach((file, index) => {
+      const previewItem = document.createElement('div');
+      previewItem.className = 'relative border-2 border-black rounded-xl overflow-hidden bg-white';
+      
+      // Image preview
+      const imgPreview = document.createElement('img');
+      imgPreview.src = URL.createObjectURL(file);
+      imgPreview.className = 'w-full h-32 object-cover';
+      imgPreview.alt = 'Preview';
+      
+      // File info overlay
+      const infoOverlay = document.createElement('div');
+      infoOverlay.className = 'absolute bottom-0 left-0 right-0 bg-black bg-opacity-70 text-white p-2';
+      
+      const fileName = document.createElement('div');
+      fileName.className = 'text-xs font-bold truncate';
+      fileName.textContent = file.name;
+      
+      const fileSize = document.createElement('div');
+      fileSize.className = 'text-xxs';
+      fileSize.textContent = `${(file.size / 1024 / 1024).toFixed(2)} MB`;
+      
+      infoOverlay.appendChild(fileName);
+      infoOverlay.appendChild(fileSize);
+      
+      // Remove button
+      const removeBtn = document.createElement('button');
+      removeBtn.type = 'button';
+      removeBtn.dataset.index = index;
+      removeBtn.className = 'absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center border border-black hover:bg-red-600';
+      removeBtn.innerHTML = '×';
+      removeBtn.onclick = function() {
+        selectedFiles.splice(index, 1);
+        updateFileListDisplay();
+      };
+      
+      previewItem.appendChild(imgPreview);
+      previewItem.appendChild(infoOverlay);
+      previewItem.appendChild(removeBtn);
+      previewGrid.appendChild(previewItem);
+    });
+
+    // Update the actual file input (for form submission)
+    const dataTransfer = new DataTransfer();
+    selectedFiles.forEach(file => dataTransfer.items.add(file));
+    fileInput.files = dataTransfer.files;
+  }
+});
+</script>

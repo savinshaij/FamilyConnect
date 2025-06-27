@@ -1,0 +1,305 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_head %}
+    <!-- Inter font for consistent typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Loading spinner CSS -->
+    <style>
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .animate-spin {
+            animation: spin 1s linear infinite;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+    <div class="max-w-4xl mx-auto px-4 py-8">
+        <div class="bg-white rounded-xl shadow-md overflow-hidden p-6">
+            <div class="mb-6">
+                <h2 class="text-3xl font-extrabold text-gray-900 leading-tight">Create New Post</h2>
+                <p class="text-gray-600 mt-2 text-lg">Share updates with your family group</p>
+            </div>
+
+            <form method="post" class="space-y-8" enctype="multipart/form-data" id="post-form">
+                {% csrf_token %}
+
+                <!-- Messages/Errors -->
+                {% if messages %}
+                <div class="mb-6">
+                    {% for message in messages %}
+                    <div class="p-4 rounded-lg {% if message.tags == 'error' %}bg-red-50 text-red-800{% else %}bg-blue-50 text-blue-800{% endif %}">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <!-- Post Type Selection -->
+                <div class="mb-6">
+                    <label class="block text-gray-800 text-lg font-medium mb-2">Who can see this?</label>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-3">
+                        <!-- Group Members Option -->
+                        <div>
+                            <input type="radio" name="post_type" id="id_post_type_group" value="FAMILY_GROUP_SPECIFIC"
+                                   class="peer hidden" checked>
+                            <label for="id_post_type_group"
+                                   class="block p-4 border-2 border-gray-200 rounded-xl cursor-pointer transition-all duration-200 ease-in-out
+                                          peer-checked:border-blue-600 peer-checked:bg-blue-50 peer-checked:ring-2 peer-checked:ring-blue-600 shadow-sm
+                                          hover:border-blue-300 hover:bg-gray-50">
+                                <div class="font-semibold text-gray-900 text-base">Group Members</div>
+                                <div class="text-sm text-gray-500 mt-1">Visible to all members of your family group.</div>
+                            </label>
+                        </div>
+                        
+                        <!-- Private Option -->
+                        <div>
+                            <input type="radio" name="post_type" id="id_post_type_private" value="PRIVATE"
+                                   class="peer hidden">
+                            <label for="id_post_type_private"
+                                   class="block p-4 border-2 border-gray-200 rounded-xl cursor-pointer transition-all duration-200 ease-in-out
+                                          peer-checked:border-blue-600 peer-checked:bg-blue-50 peer-checked:ring-2 peer-checked:ring-blue-600 shadow-sm
+                                          hover:border-blue-300 hover:bg-gray-50">
+                                <div class="font-semibold text-gray-900 text-base">Private</div>
+                                <div class="text-sm text-gray-500 mt-1">Only visible to you.</div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content Field -->
+                <div class="mb-6">
+                    <label for="id_content" class="block text-gray-800 text-lg font-medium mb-2">What's on your mind?</label>
+                    <textarea name="content" id="id_content" required
+                              class="block w-full px-4 py-2.5 border border-gray-300 rounded-lg text-base text-gray-900 transition-all duration-150 ease-in-out shadow-sm
+                                     focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 min-h-40 resize-y placeholder-gray-400"
+                              placeholder="Share your thoughts..."></textarea>
+                    <div class="flex justify-between mt-1">
+                        <span class="text-xs text-gray-500">Minimum 10 characters</span>
+                        <span id="char-count" class="text-xs text-gray-500">0/2000</span>
+                    </div>
+                </div>
+
+                <!-- Media Upload -->
+                <div class="mb-6">
+                    <label class="block text-gray-800 text-lg font-medium mb-2">Add Photos (Optional)</label>
+                    <div id="drop-zone"
+                         class="mt-2 flex justify-center px-6 pt-8 pb-8 border-2 border-dashed rounded-xl transition-colors duration-200 ease-in-out
+                                border-gray-300 hover:border-blue-400 hover:bg-blue-50 focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-blue-500">
+                        <div class="space-y-3 text-center">
+                            <svg class="mx-auto h-16 w-16 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
+                                <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            <div class="flex text-base text-gray-600">
+                                <label for="file-upload" class="relative cursor-pointer bg-white rounded-md font-semibold text-blue-600 hover:text-blue-500 focus-within:outline-none">
+                                    <span>Upload photos</span>
+                                    <input id="file-upload" name="media_attachments" type="file" class="sr-only" multiple accept="image/*">
+                                </label>
+                                <p class="pl-1 text-gray-700">or drag and drop</p>
+                            </div>
+                            <p id="file-info-text" class="text-xs text-gray-500">PNG, JPG up to 5MB each</p>
+                        </div>
+                    </div>
+                    <div id="file-list-container" class="mt-4 space-y-2">
+                        <!-- Files will be dynamically added here -->
+                    </div>
+                </div>
+
+                <!-- Form Actions -->
+                <div class="flex items-center justify-between pt-6 border-t border-gray-200">
+                    <a href="{% url 'posts:view_posts' group.id %}" class="inline-flex items-center justify-center px-5 py-2.5 rounded-lg font-semibold text-base transition-all duration-150 ease-in-out cursor-pointer border border-gray-300 shadow-sm bg-gray-50 text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-opacity-40">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2 -ml-1" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clip-rule="evenodd" />
+                        </svg>
+                        Cancel
+                    </a>
+                    <button type="submit" id="submit-btn" class="inline-flex items-center justify-center px-5 py-2.5 rounded-lg font-semibold text-base transition-all duration-150 ease-in-out cursor-pointer border border-transparent shadow-sm bg-blue-600 text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 disabled:opacity-75 disabled:cursor-not-allowed">
+                        <span id="submit-text">Post</span>
+                        <svg id="submit-spinner" class="hidden animate-spin ml-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_scripts %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+            const MAX_FILE_COUNT = 10;
+            const form = document.getElementById('post-form');
+            const fileInput = document.getElementById('file-upload');
+            const dropZone = document.getElementById('drop-zone');
+            const fileInfoText = document.getElementById('file-info-text');
+            const fileListContainer = document.getElementById('file-list-container');
+            const submitBtn = document.getElementById('submit-btn');
+            const submitText = document.getElementById('submit-text');
+            const submitSpinner = document.getElementById('submit-spinner');
+            const charCount = document.getElementById('char-count');
+            const textarea = document.getElementById('id_content');
+            let selectedFiles = [];
+
+            // Form submission handler
+            form.addEventListener('submit', function(e) {
+                // Validate content length
+                if (textarea.value.trim().length < 10) {
+                    e.preventDefault();
+                    alert('Post content must be at least 10 characters long');
+                    return;
+                }
+
+                // Show loading state
+                submitText.textContent = 'Posting...';
+                submitSpinner.classList.remove('hidden');
+                submitBtn.disabled = true;
+            });
+
+            // Character count handler
+            textarea.addEventListener('input', function() {
+                const length = this.value.length;
+                charCount.textContent = `${length}/2000`;
+                
+                // Visual feedback for minimum length
+                if (length >= 10) {
+                    charCount.classList.remove('text-red-500');
+                    charCount.classList.add('text-gray-500');
+                } else {
+                    charCount.classList.remove('text-gray-500');
+                    charCount.classList.add('text-red-500');
+                }
+            });
+
+            // Drag and drop handlers
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, preventDefaults, false);
+            });
+
+            ['dragenter', 'dragover'].forEach(eventName => {
+                dropZone.addEventListener(eventName, highlight, false);
+            });
+
+            ['dragleave', 'drop'].forEach(eventName => {
+                dropZone.addEventListener(eventName, unhighlight, false);
+            });
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            function highlight() {
+                dropZone.classList.add('border-blue-500', 'bg-blue-50');
+            }
+
+            function unhighlight() {
+                dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+            }
+
+            dropZone.addEventListener('drop', handleDrop, false);
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                handleFiles(files);
+            }
+
+            // File input change handler
+            fileInput.addEventListener('change', function() {
+                handleFiles(this.files);
+            });
+
+            // Handle selected files
+            function handleFiles(files) {
+                if (selectedFiles.length + files.length > MAX_FILE_COUNT) {
+                    alert(`You can upload a maximum of ${MAX_FILE_COUNT} files`);
+                    return;
+                }
+
+                // Filter to only accept images and check size
+                const validFiles = Array.from(files).filter(file => {
+                    if (!file.type.startsWith('image/')) {
+                        return false;
+                    }
+                    if (file.size > MAX_FILE_SIZE) {
+                        alert(`File ${file.name} is too large (max 5MB)`);
+                        return false;
+                    }
+                    return true;
+                });
+
+                selectedFiles = [...selectedFiles, ...validFiles];
+                updateFileListDisplay();
+            }
+
+            // Update file list display
+            function updateFileListDisplay() {
+                fileListContainer.innerHTML = '';
+
+                if (selectedFiles.length === 0) {
+                    fileInfoText.textContent = 'PNG, JPG up to 5MB each';
+                    return;
+                }
+
+                fileInfoText.textContent = `${selectedFiles.length} photo(s) selected (max ${MAX_FILE_COUNT})`;
+
+                selectedFiles.forEach((file, index) => {
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'flex items-center justify-between p-3 bg-gray-100 rounded-lg shadow-sm';
+                    
+                    // Create preview for images
+                    const preview = document.createElement('div');
+                    preview.className = 'flex items-center space-x-3';
+                    
+                    const imgPreview = document.createElement('img');
+                    imgPreview.src = URL.createObjectURL(file);
+                    imgPreview.className = 'h-12 w-12 object-cover rounded';
+                    imgPreview.alt = 'Preview';
+                    
+                    const fileDetails = document.createElement('div');
+                    fileDetails.innerHTML = `
+                        <span class="text-sm font-medium text-gray-800 block truncate">${file.name}</span>
+                        <span class="text-xs text-gray-500">${(file.size / 1024 / 1024).toFixed(2)} MB</span>
+                    `;
+                    
+                    preview.appendChild(imgPreview);
+                    preview.appendChild(fileDetails);
+                    
+                    const removeBtn = document.createElement('button');
+                    removeBtn.type = 'button';
+                    removeBtn.dataset.index = index;
+                    removeBtn.className = 'remove-file-btn text-red-500 hover:text-red-700 transition-colors duration-200';
+                    removeBtn.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 011-1h4a1 1 0 110 2H8a1 1 0 01-1-1zm1 3a1 1 0 100 2h4a1 1 0 100-2H8z" clip-rule="evenodd" />
+                        </svg>
+                    `;
+                    
+                    fileItem.appendChild(preview);
+                    fileItem.appendChild(removeBtn);
+                    fileListContainer.appendChild(fileItem);
+                });
+
+                // Attach event listeners to remove buttons
+                document.querySelectorAll('.remove-file-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const indexToRemove = parseInt(this.dataset.index);
+                        selectedFiles.splice(indexToRemove, 1);
+                        updateFileListDisplay();
+                    });
+                });
+
+                // Update the actual file input (for form submission)
+                const dataTransfer = new DataTransfer();
+                selectedFiles.forEach(file => dataTransfer.items.add(file));
+                fileInput.files = dataTransfer.files;
+            }
+        });
+    </script>
+{% endblock %}

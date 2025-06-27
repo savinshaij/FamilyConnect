@@ -1,0 +1,366 @@
+{% comment %} {% extends "base.html" %}
+{% load static humanize %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto px-4 py-8">
+  <!-- Header with create post button -->
+  <div class="flex items-center justify-between mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">Posts in {{ group.group_name }}</h1>
+    <a href="{% url 'posts:add_post' group.id %}" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clip-rule="evenodd" />
+      </svg>
+      New Post
+    </a>
+  </div>
+
+  <!-- Empty state -->
+  {% if not posts %}
+  <div class="text-center py-12 border-2 border-dashed border-gray-200 rounded-lg">
+    <svg xmlns="http://www.w3.org/2000/svg" class="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+    </svg>
+    <h3 class="mt-2 text-lg font-medium text-gray-900">No posts yet</h3>
+    <p class="mt-1 text-gray-500">Be the first to share something with your family!</p>
+    <div class="mt-6">
+      <a href="{% url 'posts:add_post' group.id %}" class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+        Create First Post
+      </a>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Posts feed -->
+  <div class="space-y-6">
+    {% for post in posts %}
+    <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow">
+      <!-- Post header -->
+      <div class="p-4 flex items-center space-x-3 border-b border-gray-100">
+        <img class="h-10 w-10 rounded-full object-cover" 
+             src="{{ post.created_by.profile.image.url|default:'/static/images/default-avatar.png' }}" 
+             alt="{{ post.created_by.username }}">
+        <div class="flex-1 min-w-0">
+          <p class="text-sm font-medium text-gray-900 truncate">
+           {{ post.created_by_user.get_full_name }}
+          </p>
+          <p class="text-xs text-gray-500 flex items-center">
+            {{ post.created_at|naturaltime }}
+            {% if post.post_type == 'PRIVATE' %}
+            <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-purple-100 text-purple-800">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
+              </svg>
+              Private
+            </span>
+            {% elif post.post_type == 'PUBLIC' %}
+            <span class="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-3 w-3 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              </svg>
+              Public
+            </span>
+            {% endif %}
+          </p>
+        </div>
+        {% if post.created_by_user == request.user %}
+        <button class="text-gray-400 hover:text-gray-500 rounded-full p-1">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+          </svg>
+        </button>
+        {% endif %}
+      </div>
+
+      <!-- Post content -->
+      <div class="p-4">
+        <p class="text-gray-800 whitespace-pre-line">{{ post.content }}</p>
+        
+        <!-- Media attachments -->
+        {% if post.media_attachments %}
+        <div class="mt-4 rounded-lg overflow-hidden grid gap-2 
+          {% if post.media_attachments|length == 1 %}grid-cols-1{% endif %}
+          {% if post.media_attachments|length == 2 %}grid-cols-2{% endif %}
+          {% if post.media_attachments|length == 3 %}grid-cols-2{% endif %}
+          {% if post.media_attachments|length >= 4 %}grid-cols-2{% endif %}">
+          {% for media in post.media_attachments %}
+          <div class="relative {% if post.media_attachments|length == 3 and forloop.first %}col-span-2{% endif %}">
+            <img src="{{ media.url }}" alt="Post media" class="w-full h-full object-cover rounded-lg">
+            {% if media.type == 'video' %}
+            <div class="absolute inset-0 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-white opacity-90" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+              </svg>
+            </div>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Post stats -->
+      <div class="px-4 py-2 border-t border-gray-100 text-sm text-gray-500 flex items-center space-x-4">
+        <span class="flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
+          </svg>
+          <span class="like-count">{{ post.likes_count }}</span>
+        </span>
+        <span class="flex items-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clip-rule="evenodd" />
+          </svg>
+          <span class="comment-count">{{ post.comments_count }}</span>
+        </span>
+      </div>
+
+      <!-- Post actions -->
+      <div class="px-4 py-2 border-t border-gray-100 flex space-x-2">
+        <button class="like-btn flex-1 flex items-center justify-center py-2 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors {% if request.user in post.likes.all %}text-red-500{% endif %}" 
+                data-post-id="{{ post.post_id }}">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+            <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
+          </svg>
+          Like
+        </button>
+        <button class="comment-btn flex-1 flex items-center justify-center py-2 rounded-lg text-gray-600 hover:bg-gray-50 transition-colors" 
+                data-post-id="{{ post.post_id }}">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M18 5v8a2 2 0 01-2 2h-5l-5 4v-4H4a2 2 0 01-2-2V5a2 2 0 012-2h12a2 2 0 012 2zM7 8H5v2h2V8zm2 0h2v2H9V8zm6 0h-2v2h2V8z" clip-rule="evenodd" />
+          </svg>
+          Comment
+        </button>
+      </div>
+
+      <!-- Comments section -->
+      <div class="comments-section border-t border-gray-100 {% if not post.comments.exists %}hidden{% endif %}">
+        <!-- Existing comments -->
+        <div class="p-4 space-y-4">
+          {% for comment in post.comments.all|slice:":3" %}
+          <div class="flex space-x-3">
+            <img class="h-8 w-8 rounded-full object-cover" 
+                 src="{{ comment.author.profile.image.url|default:'/static/images/default-avatar.png' }}" 
+                 alt="{{ comment.author.username }}">
+            <div>
+              <div class="bg-gray-50 p-3 rounded-lg">
+                <p class="text-sm font-medium text-gray-900">{{ comment.author.get_full_name|default:comment.author.username }}</p>
+                <p class="text-sm text-gray-700">{{ comment.content }}</p>
+              </div>
+              <div class="mt-1 flex items-center space-x-2 text-xs text-gray-500">
+                <span>{{ comment.created_at|naturaltime }}</span>
+                {% if comment.author == request.user %}
+                <button class="delete-comment-btn text-red-500 hover:text-red-700" 
+                        data-comment-id="{{ comment.id }}">
+                  Delete
+                </button>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+          
+          {% if post.comments.count > 3 %}
+          <button class="view-all-comments-btn text-sm text-blue-600 hover:text-blue-800">
+            View all {{ post.comments.count }} comments
+          </button>
+          {% endif %}
+        </div>
+        
+        <!-- Add comment form -->
+        <div class="px-4 pb-4">
+          <form class="add-comment-form flex items-center space-x-2" data-post-id="{{ post.post_id }}">
+            <img class="h-8 w-8 rounded-full object-cover" 
+                 src="{{ request.user.profile.image.url|default:'/static/images/default-avatar.png' }}" 
+                 alt="{{ request.user.username }}">
+            <div class="flex-1 relative">
+              <input type="text" 
+                     class="comment-input w-full bg-gray-50 rounded-full px-4 py-2 text-sm text-gray-900 focus:outline-none focus:ring-1 focus:ring-blue-500" 
+                     placeholder="Write a comment...">
+              <button type="submit" class="absolute right-2 top-1/2 transform -translate-y-1/2 text-blue-500 hover:text-blue-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-8.707l-3-3a1 1 0 00-1.414 1.414L10.586 9H7a1 1 0 100 2h3.586l-1.293 1.293a1 1 0 101.414 1.414l3-3a1 1 0 000-1.414z" clip-rule="evenodd" />
+                </svg>
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  // Like/Unlike functionality
+  document.querySelectorAll('.like-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const postId = this.dataset.postId;
+      const isLiked = this.classList.contains('text-red-500');
+      const likeCountEl = this.closest('.bg-white').querySelector('.like-count');
+      
+      // Toggle UI immediately
+      this.classList.toggle('text-red-500');
+      const currentCount = parseInt(likeCountEl.textContent);
+      likeCountEl.textContent = isLiked ? currentCount - 1 : currentCount + 1;
+      
+      // Send AJAX request
+      fetch(`/posts/${postId}/like/`, {
+        method: isLiked ? 'DELETE' : 'POST',
+        headers: {
+          'X-CSRFToken': '{{ csrf_token }}',
+          'Content-Type': 'application/json'
+        },
+        credentials: 'same-origin'
+      }).then(response => response.json())
+        .then(data => {
+          // Update UI with actual counts
+          likeCountEl.textContent = data.likes_count;
+          if (data.user_has_liked) {
+            this.classList.add('text-red-500');
+          } else {
+            this.classList.remove('text-red-500');
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          // Revert UI if request fails
+          this.classList.toggle('text-red-500');
+          likeCountEl.textContent = currentCount;
+        });
+    });
+  });
+  
+  // Comment form submission
+  document.querySelectorAll('.add-comment-form').forEach(form => {
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const postId = this.dataset.postId;
+      const input = this.querySelector('.comment-input');
+      const content = input.value.trim();
+      
+      if (!content) return;
+      
+      // Optimistic UI update
+      const commentHtml = `
+        <div class="flex space-x-3">
+          <img class="h-8 w-8 rounded-full object-cover" 
+               src="{{ request.user.profile.image.url|default:'/static/images/default-avatar.png' }}" 
+               alt="{{ request.user.username }}">
+          <div>
+            <div class="bg-gray-50 p-3 rounded-lg">
+              <p class="text-sm font-medium text-gray-900">{{ request.user.get_full_name|default:request.user.username }}</p>
+              <p class="text-sm text-gray-700">${content}</p>
+            </div>
+            <div class="mt-1 flex items-center space-x-2 text-xs text-gray-500">
+              <span>Just now</span>
+              <button class="delete-comment-btn text-red-500 hover:text-red-700" 
+                      data-comment-id="new">
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      const commentsContainer = this.closest('.comments-section').querySelector('.space-y-4');
+      commentsContainer.insertAdjacentHTML('afterbegin', commentHtml);
+      
+      // Update comment count
+      const commentCountEl = this.closest('.bg-white').querySelector('.comment-count');
+      commentCountEl.textContent = parseInt(commentCountEl.textContent) + 1;
+      
+      // Clear input
+      input.value = '';
+      
+      // Show comments section if hidden
+      this.closest('.comments-section').classList.remove('hidden');
+      
+      // Send AJAX request
+      fetch(`/posts/${postId}/comment/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': '{{ csrf_token }}',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ content }),
+        credentials: 'same-origin'
+      }).then(response => response.json())
+        .then(data => {
+          if (data.success) {
+            // Update the temporary comment with real data
+            const tempComment = commentsContainer.querySelector('[data-comment-id="new"]');
+            if (tempComment) {
+              tempComment.dataset.commentId = data.comment.id;
+              tempComment.querySelector('span').textContent = data.comment.created_at;
+            }
+            commentCountEl.textContent = data.comments_count;
+          } else {
+            // Remove optimistic update if failed
+            commentsContainer.removeChild(commentsContainer.firstChild);
+            commentCountEl.textContent = parseInt(commentCountEl.textContent) - 1;
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          commentsContainer.removeChild(commentsContainer.firstChild);
+          commentCountEl.textContent = parseInt(commentCountEl.textContent) - 1;
+        });
+    });
+  });
+  
+  // Delete comment
+  document.querySelectorAll('.delete-comment-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const commentId = this.dataset.commentId;
+      const commentElement = this.closest('.flex.space-x-3');
+      const postCard = this.closest('.bg-white');
+      const commentCountEl = postCard.querySelector('.comment-count');
+      const currentCount = parseInt(commentCountEl.textContent);
+      
+      // Optimistic removal
+      commentElement.remove();
+      commentCountEl.textContent = currentCount - 1;
+      
+      // Send AJAX request
+      fetch(`/posts/comment/${commentId}/delete/`, {
+        method: 'DELETE',
+        headers: {
+          'X-CSRFToken': '{{ csrf_token }}',
+          'Content-Type': 'application/json'
+        },
+        credentials: 'same-origin'
+      }).then(response => response.json())
+        .then(data => {
+          if (!data.success) {
+            // Revert if deletion failed
+            commentCountEl.textContent = currentCount;
+            // Would need to reinsert the comment element here
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          commentCountEl.textContent = currentCount;
+        });
+    });
+  });
+  
+  // View all comments
+  document.querySelectorAll('.view-all-comments-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const postId = this.closest('.bg-white').querySelector('.like-btn').dataset.postId;
+      window.location.href = `/posts/${postId}/detail/`;
+    });
+  });
+  
+  // Toggle comments section
+  document.querySelectorAll('.comment-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const commentsSection = this.closest('.bg-white').querySelector('.comments-section');
+      commentsSection.classList.toggle('hidden');
+    });
+  });
+});
+</script>
+{% endblock %} {% endcomment %}
+

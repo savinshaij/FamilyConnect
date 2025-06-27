@@ -1,0 +1,85 @@
+
+<!-- Create Event Form -->
+<form method="POST" enctype="multipart/form-data" action="{% url 'events:add_event' group.id %}" 
+      class="max-w-2xl mx-auto    mt-6 p-6 border-2 border-black md:rounded-xl bg-white shadow-[4px_4px_0_#000]">
+  {% csrf_token %}
+
+  <h2 class="text-2xl font-extrabold text-black mb-6 text-center uppercase tracking-widest">
+    Create New Event
+  </h2>
+
+  <div class="space-y-6">
+    <!-- Event Name -->
+    <div class="relative border-2 border-black rounded-lg bg-white shadow-[2px_2px_0_#000]">
+      <div class="absolute inset-y-0 left-0 flex items-center pl-3 text-black">
+        <i class="fas fa-calendar-star text-lg"></i>
+      </div>
+      <input
+        name="event_name"
+        type="text"
+        placeholder="Event Name"
+        required
+        class="w-full pl-9 pr-3 py-2 rounded-lg bg-transparent focus:outline-none font-bold text-black text-sm uppercase placeholder-black placeholder-opacity-60"
+      />
+    </div>
+
+    <!-- Description -->
+    <div class="relative border-2 border-black rounded-lg bg-white shadow-[2px_2px_0_#000]">
+      <div class="absolute top-3 left-0 flex items-start pl-3 pt-2 text-black">
+        <i class="fas fa-align-left text-lg"></i>
+      </div>
+      <textarea
+        name="description"
+        placeholder="Description (Optional)"
+        class="w-full pl-9 pr-3 py-2 rounded-lg bg-transparent focus:outline-none min-h-[80px] font-bold text-black text-sm resize-none uppercase placeholder-black placeholder-opacity-60"
+      ></textarea>
+    </div>
+
+  
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="relative border-2 border-black rounded-lg bg-white shadow-[2px_2px_0_#000]">
+        <div class="absolute inset-y-0 left-0 flex items-center pl-3 text-black">
+          <i class="fas fa-clock text-lg"></i>
+        </div>
+        <input
+          name="start_time"
+          type="datetime-local"
+          required
+          class="w-full pl-9 pr-3 py-2 rounded-lg bg-transparent focus:outline-none font-bold text-black text-sm uppercase"
+        />
+      </div>
+      <div class="relative border-2 border-black rounded-lg bg-white shadow-[2px_2px_0_#000]">
+        <div class="absolute inset-y-0 left-0 flex items-center pl-3 text-black">
+          <i class="fas fa-clock text-lg"></i>
+        </div>
+        <input
+          name="end_time"
+          type="datetime-local"
+          class="w-full pl-9 pr-3 py-2 rounded-lg bg-transparent focus:outline-none font-bold text-black text-sm uppercase"
+        />
+      </div>
+    </div>
+
+    <!-- Location -->
+    <div class="relative border-2 border-black rounded-lg bg-white shadow-[2px_2px_0_#000]">
+      <div class="absolute inset-y-0 left-0 flex items-center pl-3 text-black">
+        <i class="fas fa-map-marker-alt text-lg"></i>
+      </div>
+      <input
+        name="location"
+        type="text"
+        placeholder="Location"
+        class="w-full pl-9 pr-3 py-2 rounded-lg bg-transparent focus:outline-none font-bold text-black text-sm uppercase placeholder-black placeholder-opacity-60"
+      />
+    </div>
+
+    <!-- Submit -->
+    <button
+      type="submit"
+      class="w-full flex items-center justify-center space-x-2 py-3 rounded-lg border-2 border-black bg-black text-white font-bold uppercase tracking-widest shadow-[3px_3px_0_#000] hover:bg-gray-900 transition duration-150 active:translate-y-0.5 active:shadow-[1px_1px_0_#000]"
+    >
+      <i class="fas fa-plus text-base"></i>
+      <span>Create Event</span>
+    </button>
+  </div>
+</form>
